@@ -1,0 +1,118 @@
+name: Remote Shelly HAOS image
+
+"on":
+  push:
+    branches:
+      - feature/remote-websocket-transport
+    paths:
+      - .github/workflows/haos-image.yml
+      - haos/**
+
+permissions:
+  contents: read # Read the pinned public sources.
+
+concurrency:
+  group: haos-image-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and smoke-test qemux86-64 image
+    if: >-
+      github.repository ==
+      'drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    permissions:
+      contents: read # Read the pinned public sources.
+      packages: write # Publish the smoke-tested development image to GHCR.
+    env:
+      REMOTE_IMAGE: ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64
+      IMAGE_VERSION: 2026.11.0.dev0
+      BASE_IMAGE: ghcr.io/home-assistant/amd64-homeassistant-base:2026.07.0
+    steps:
+      - name: Check out image packaging
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: packaging
+          persist-credentials: false
+      - name: Check out tested Core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: drHouse-gif/core
+          ref: 726a64d62c7a95bb27cec5a72163df3e1c2d822a
+          path: core
+          persist-credentials: false
+      - name: Check out tested aioshelly
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          repository: drHouse-gif/aioshelly
+          ref: 74751fcb876cc5fbd993721da765d40cd5b5b750
+          path: aioshelly
+          persist-credentials: false
+      - name: Resolve the base image and prepare provenance
+        run: |
+          docker pull "$BASE_IMAGE"
+          base_digest=$(docker image inspect "$BASE_IMAGE" \
+            --format '{{index .RepoDigests 0}}')
+          echo "BUILD_FROM=$base_digest" >> "$GITHUB_ENV"
+          python3 packaging/haos/prepare.py --core core --aioshelly aioshelly \
+            --output packaging/haos/generated --base-image "$base_digest"
+          cp packaging/haos/.dockerignore .dockerignore
+      - name: Set up Docker builder
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069
+      - name: Build the pinned development image
+        run: |
+          docker buildx build --load --progress plain \
+            --file packaging/haos/Dockerfile \
+            --build-arg "BUILD_FROM=$BUILD_FROM" \
+            --tag "$REMOTE_IMAGE:$IMAGE_VERSION" .
+      - name: Verify installed sources and dependencies
+        run: |
+          docker run --rm --entrypoint python3 "$REMOTE_IMAGE:$IMAGE_VERSION" \
+            /usr/local/bin/check_remote_image.py
+          docker run --rm --entrypoint uv "$REMOTE_IMAGE:$IMAGE_VERSION" \
+            pip check --system
+      - name: Verify fresh boot and the native remote config form
+        run: |
+          mkdir ci-config
+          printf 'default_config:\nlogger:\n  default: warning\n' \
+            > ci-config/configuration.yaml
+          docker run --detach --name shelly-remote-smoke \
+            --publish 127.0.0.1:8123:8123 \
+            --volume "$PWD/ci-config:/config" "$REMOTE_IMAGE:$IMAGE_VERSION"
+          python3 packaging/haos/check_startup.py
+      - name: Publish the tested image
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+        run: |
+          printf '%s' "$GHCR_TOKEN" | docker login ghcr.io \
+            --username "$GHCR_USER" --password-stdin
+          docker push "$REMOTE_IMAGE:$IMAGE_VERSION"
+          docker image inspect "$REMOTE_IMAGE:$IMAGE_VERSION" \
+            > image-report.json
+          docker logout ghcr.io
+          if docker manifest inspect "$REMOTE_IMAGE:$IMAGE_VERSION" \
+            > /dev/null 2>&1; then
+            echo 'Anonymous pull: available' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Anonymous pull: unavailable.' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Set this container package to public before HAOS installation.' \
+              >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "Image: $REMOTE_IMAGE:$IMAGE_VERSION" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload build provenance
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: haos-image-provenance
+          path: |
+            packaging/haos/generated/provenance.json
+            packaging/haos/generated/requirements-runtime.txt
+            image-report.json
+          if-no-files-found: error
+      - name: Show smoke logs and clean up
+        if: always()
+        run: |
+          docker logs --tail 100 shelly-remote-smoke || true
+          docker rm --force shelly-remote-smoke || true
