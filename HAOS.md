@@ -1,12 +1,38 @@
 # HAOS development image
 
-This image runs the tested native Core integration on an isolated HAOS test VM. It targets `amd64` / `qemux86-64`, with Core `b2e5fb3eba8645cce0453829c12f02a9c4b2135f` and aioshelly `74751fcb876cc5fbd993721da765d40cd5b5b750`. It is a development build, not an official HA release.
+This image runs the tested native Core integration on an isolated HAOS test VM. It targets `amd64` / `qemux86-64`, with Core `f5e9025b01ae70abdb0a94fcbafbaddf2d5070eb` and unchanged aioshelly `74751fcb876cc5fbd993721da765d40cd5b5b750`. It is a development build, not an official HA release.
 
-The image build version is `2026.11.0.dev1`; the pinned Core package still reports `2026.11.0.dev0`. HAOS tracks the container's build version, so the new tag allows an update from the already-installed first image without changing Core application version files. The container image name is:
+The image build version is `2026.11.0.dev2`; the pinned Core package still reports `2026.11.0.dev0`. HAOS tracks the container's build version, so this new immutable tag permits an update from the earlier test image without changing Core application version files. The container image name is:
 
 ```text
-ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64:2026.11.0.dev1
+ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64:2026.11.0.dev2
 ```
+
+This image includes the progress URL fix, rejected-password feedback, remote BLE/RTSP scope corrections, expired-confirmation guards and verified credential rotation. The pinned Core passed all 790 Shelly tests and 558 snapshots in [fork CI 36926623186](https://github.com/drHouse-gif/core/actions/runs/36926623186).
+
+[Image run 36927098977](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36927098977) verifies the pinned source hashes and generated translations, installed dependency consistency and fresh boot to `RUNNING` with the native remote form before publishing. The `dev2` image digest is:
+
+```text
+sha256:43c0cebc9b169c13215266ea6112ff8648a234ec555f04c90d06df947c94f4fc
+```
+
+The build completed successfully: 55 source fingerprints, 149 installed packages and the native startup/config-flow smoke checks passed. The downloaded provenance archive passed its SHA-256 check; its source fingerprints match the local pinned checkouts and its image report records this exact digest. Anonymous registry access was independently verified with HTTP 200, matching manifest/config hashes, Linux `amd64` architecture and image build version `2026.11.0.dev2`.
+
+## Update the existing dedicated test VM
+
+Keep the original full pre-test checkpoint. Create an additional checkpoint before this update, then run each command separately:
+
+```sh
+ha backups new --name before-shelly-remote-dev2
+ha core update --version 2026.11.0.dev2
+ha core info
+```
+
+The existing custom image override should remain `ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64`; check it before updating. `ha core info` must report image build version `2026.11.0.dev2`. The existing remote entry and device URL should continue working after HA restarts. Inspect diagnostics locally for `transport.type: remote_ws` and `transport.connected: true`, then perform the measurements, outage/recovery and credential rotation steps in [TESTING.md](TESTING.md). Share only sanitized results.
+
+Installation and physical-device validation of `dev2` are pending. The recorded successful Pro 3EM pairing below used `dev1` and does not validate the newer fixes.
+
+## Recorded dev1 validation
 
 The revised image includes the progress-screen URL fix from [Core run 36889581891](https://github.com/drHouse-gif/core/actions/runs/36889581891), which passed 772 tests and 558 snapshots. The first VM UI test exposed that the frontend reads `config.progress.remote_connect`, while the URL instructions were under `config.step.remote_connect.description`. The fix moves the instructions and URL placeholder to the displayed progress text and renders the URL as code for copying. The image check now verifies the generated English progress translation includes that placeholder.
 
@@ -61,12 +87,12 @@ This startup smoke check does not validate a physical Shelly, HAOS Supervisor de
    ```
 
    ```sh
-   ha core update --version 2026.11.0.dev1
+   ha core update --version 2026.11.0.dev2
    ```
 
    HA restarts during the update. Leave the existing HTTP port and external URL settings in place.
 
-5. Check `ha core info`: it should show the custom image and image build version `2026.11.0.dev1`. HA's UI/API still reports the pinned Core package version `2026.11.0.dev0`. Open HA, add the **Shelly** integration and verify the remote connection option appears. The library requirement skip warning is expected for this development image.
+5. Check `ha core info`: it should show the custom image and image build version `2026.11.0.dev2`. HA's UI/API still reports the pinned Core package version `2026.11.0.dev0`. Open HA, add the **Shelly** integration and verify the remote connection option appears. The library requirement skip warning is expected for this development image.
 6. Validate TLS and HA/proxy log protection before using a real pairing URL. Then follow the Internet-separated test procedure in TESTING.md. Do not paste the generated URL into chat, screenshots or shell commands.
 
 ## Return to the checkpoint

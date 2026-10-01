@@ -29,7 +29,7 @@ flowchart TD
 4. The device connects using that credential. HA requires a secure request, rejects browser Origin headers and authenticates before WebSocket upgrade.
 5. HA sends `Shelly.GetDeviceInfo` on the candidate socket, requiring matching response source, ID/MAC suffix, MAC, generation, model and firmware fields.
 6. HA binds the verifier to the queried MAC, checks existing entries and competing credentials, then attaches the socket to the separate remote server.
-7. The user confirms identity. HA fetches `Shelly.GetConfig` and `Shelly.GetStatus`; a Digest challenge prompts for the device password only when necessary. Sleeping devices and unsupported firmware are rejected.
+7. The user confirms identity within the pairing deadline. HA fetches `Shelly.GetConfig` and `Shelly.GetStatus`; a Digest challenge prompts for the device password only when necessary. Expiry is checked again after the calls. Sleeping devices and unsupported firmware are rejected.
 8. A normal native entry is created with the verifier. Its temporary pairing deadline is removed when the entry registers the bound credential.
 
 Device MAC and RPC identity are self-reported. Their consistency prevents accidental cross-device routing; it is not hardware attestation. Credential possession and TLS are the authentication boundary.
@@ -42,7 +42,7 @@ The socket may change while the logical connection object and `RpcDevice` remain
 
 On disconnect, native entities become unavailable. On reconnect, `ONLINE` is emitted even if an earlier failed initialization left the device uninitialized. The coordinator reinitializes, fetches current config/status and marks entities available without recreating registry entries. At HA startup, bound verifier records are restored before setup; a device returning while its entry is in `SETUP_RETRY` schedules native entry reload immediately.
 
-Revoke removes admission before closing sockets. Regenerate creates a replacement bound to the same entry/MAC; confirmation revokes the old verifier and reloads the entry, while cancellation revokes only the temporary replacement.
+Revoke removes admission before closing sockets. Regenerate creates a ten-minute replacement bound to the same entry/MAC. Confirmation verifies that the active socket belongs to this replacement, performs config/status RPC and rechecks expiry, socket ownership and entry consistency. It then persists the new verifier and revokes the old one. A loaded native device stays in place because only admission changed; an entry waiting in setup retry is reloaded after confirmation. Cancellation revokes only the temporary replacement.
 
 ## Code locations
 
