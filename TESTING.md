@@ -54,6 +54,8 @@ Workspace limitations were handled explicitly: full `script/setup` could not bui
 
 ## Internet-separated device test
 
+For a dedicated HAOS `amd64` / `qemux86-64` test VM, use [HAOS.md](HAOS.md) to install the pinned native Core image. The image handles the aioshelly dependency override itself; the direct Core commands below apply to the Linux development environment.
+
 Use an isolated HA Core development instance, not the existing production HAOS system. Network A contains a mains-powered Shelly Plus/Pro or compatible Gen3/4 device. Network B contains the HA instance with publicly reachable HTTPS/WSS, a trusted certificate and WebSocket forwarding. Do not route Network A's private subnet to HA.
 
 1. Verify HA and reverse-proxy/edge log redaction using an expendable canary, including error paths. See SECURITY.md.

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile@sha256:2780b5c3bab67f1f76c781860de469442999ed1a0d7992a5efdf2cffc0e3d769
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-homeassistant-base:2026.07.0
+ARG BUILD_FROM=ghcr.io/home-assistant/amd64-homeassistant-base:2026.07.0@sha256:2b3125e4633c864005714e21844667a8790fcea3ac4e30a05b7a1fe283696af6
 FROM ${BUILD_FROM}
 
 LABEL io.hass.type="core" \
@@ -19,7 +19,7 @@ COPY core/rootfs /
 COPY --from=ghcr.io/alexxit/go2rtc:1.9.14@sha256:675c318b23c06fd862a61d262240c9a63436b4050d177ffc68a32710d9e05bae /usr/local/bin/go2rtc /bin/go2rtc
 
 WORKDIR /usr/src/homeassistant
-COPY core/requirements.txt ./requirements.txt
+COPY core/requirements.txt core/requirements_all.txt ./
 COPY core/homeassistant/package_constraints.txt ./homeassistant/package_constraints.txt
 COPY packaging/haos/generated/requirements-runtime.txt ./requirements-runtime.txt
 RUN pip3 install --no-cache-dir "uv==0.12.20" \

@@ -30,6 +30,8 @@ jobs:
       REMOTE_IMAGE: ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64
       IMAGE_VERSION: 2026.11.0.dev0
       BASE_IMAGE: ghcr.io/home-assistant/amd64-homeassistant-base:2026.07.0
+      BASE_DIGEST: >-
+        sha256:2b3125e4633c864005714e21844667a8790fcea3ac4e30a05b7a1fe283696af6
     steps:
       - name: Check out image packaging
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -52,8 +54,8 @@ jobs:
           persist-credentials: false
       - name: Resolve the base image and prepare provenance
         run: |
-          docker pull "$BASE_IMAGE"
-          base_digest=$(docker image inspect "$BASE_IMAGE" \
+          docker pull "$BASE_IMAGE@$BASE_DIGEST"
+          base_digest=$(docker image inspect "$BASE_IMAGE@$BASE_DIGEST" \
             --format '{{index .RepoDigests 0}}')
           echo "BUILD_FROM=$base_digest" >> "$GITHUB_ENV"
           python3 packaging/haos/prepare.py --core core --aioshelly aioshelly \
@@ -98,7 +100,7 @@ jobs:
             echo 'Anonymous pull: available' >> "$GITHUB_STEP_SUMMARY"
           else
             echo 'Anonymous pull: unavailable.' >> "$GITHUB_STEP_SUMMARY"
-            echo 'Set this container package to public before HAOS installation.' \
+            echo 'Make the package public before HAOS installation.' \
               >> "$GITHUB_STEP_SUMMARY"
           fi
           echo "Image: $REMOTE_IMAGE:$IMAGE_VERSION" >> "$GITHUB_STEP_SUMMARY"

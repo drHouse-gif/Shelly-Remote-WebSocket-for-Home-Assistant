@@ -15,6 +15,8 @@ Local and GitHub CI validation: 771 Core Shelly tests and 558 snapshots passed; 
 
 Read [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md), [TESTING.md](TESTING.md) and [ROADMAP.md](ROADMAP.md) before trying the forks.
 
+For an isolated `amd64` / `qemux86-64` HAOS test VM, use the pinned development image and installation procedure in [HAOS.md](HAOS.md).
+
 The complete generated WSS URL is a bearer secret. Protect HA, reverse-proxy, edge and device logs before pairing. Moving a secret into the query string does not make it safe to log.
 
 Known scope limits: remote camera HTTP/RTSP and remote BLE proxy scanning are not supported; sleeping devices continue using the existing local battery path. Public HTTPS/WSS reachability, certificate trust and HA Cloud forwarding still require deployment and physical-device validation. The fork library must be installed explicitly for development; a published aioshelly release and a normal Core dependency bump are required before an upstream Core change can ship.
