@@ -22,12 +22,12 @@
 
 No automatic bootstrap-token rotation protocol, remote camera HTTP/RTSP proxy, Internet BLE scanner proxy, remote sleeping-device support or hardware identity attestation is implemented. Native RPC functionality remains available through the shared transport; these separate protocols need their own design if requested.
 
-## Suggested upstream changes
+## Upstream review
 
-First aioshelly PR: `ConnectionOptions.remote_device_id`, persistent prepared inbound `WsServerConnection`/server APIs, authorized-only remote subscriptions, RPC correlation/auth/timeouts, disconnect/reconnect semantics and transport tests. Keep HA endpoint/credential/UI policy out of the library. Human review is required before submission.
+Draft [aioshelly #1304](https://github.com/home-assistant-libs/aioshelly/pull/1304) covers `ConnectionOptions.remote_device_id`, persistent prepared inbound `WsServerConnection`/server APIs, authorized-only remote subscriptions, RPC correlation/auth/timeouts, disconnect/reconnect semantics and transport tests. HA endpoint/credential/UI policy remains in Core.
 
-Then Core PR, dependent on that published library release: remote config flow and entry schema, HTTPS endpoint, verifier/identity lifecycle, native setup/coordinator integration, camera/BLE scope guards, remote-only Repair behavior, diagnostics/log redaction, translations and integration/security/regression tests. Development-only fork CI/dependency overrides should not be part of the production dependency mechanism.
+Draft [Core #183944](https://github.com/home-assistant/core/pull/183944), dependent on a reviewed and published library release, covers the remote config flow and entry schema, HTTPS endpoint, verifier/identity lifecycle, native setup/coordinator integration, camera/BLE scope guards, remote-only Repair behavior, diagnostics/log redaction, translations and integration/security/regression tests. Both upstream review branches exclude the development-only fork workflows; Core's normal dependency update remains a blocker before readiness.
 
 Likely maintainer review questions: whether integration-specific logger filters should instead be a common HTTP/API redaction facility; public Internet endpoint support and brute-force/resource policy; UX for external URL and secret copy/rotation; self-reported MAC identity limitations; initial pairing expiry versus reconnect credential lifetime; remote BLE/camera limitations; quality-scale diagnostics and how the integration's `local_push` classification describes this additional remote transport.
 
-No upstream PR, issue/comment or merge is authorized by the work completed here. Keep development on `feature/remote-websocket-transport`; ask before any upstream submission.
+Both draft PRs were opened at the operator's explicit request on 2026-10-01. The tested implementation stays on `feature/remote-websocket-transport`; upstream review uses `feature/remote-websocket-transport-upstream`. Keep subsequent review changes as new commits so reviewers can follow them. Merging to `dev` or `main` still requires explicit authorization. See [UPSTREAM.md](UPSTREAM.md).

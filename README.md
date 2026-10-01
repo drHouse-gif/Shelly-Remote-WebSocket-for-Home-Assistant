@@ -2,7 +2,7 @@
 
 Development of device-initiated Internet WSS connections inside Home Assistant's official Shelly integration. A mains-powered Gen2, Gen3 or Gen4 device connects from its own network to Home Assistant; HA uses that connection for normal RPC control and notifications. HA never needs the device's private IP address.
 
-This is a fork development project, not a released Home Assistant feature. No upstream pull request has been opened and no changes have been merged to `dev` or `main`.
+This is a fork development project, not a released Home Assistant feature. Upstream drafts are open: [aioshelly #1304](https://github.com/home-assistant-libs/aioshelly/pull/1304) and [Core #183944](https://github.com/home-assistant/core/pull/183944). Core depends on a reviewed, published aioshelly release. See [UPSTREAM.md](UPSTREAM.md) for review branches and current check status. No changes have been merged to `dev` or `main`.
 
 | Repository                                                 | Feature branch                       | Tested implementation                      |
 | ---------------------------------------------------------- | ------------------------------------ | ------------------------------------------ |
