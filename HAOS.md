@@ -14,7 +14,9 @@ Validated on 2026-10-01: [build run 36882493791](https://github.com/drHouse-gif/
 sha256:d430b68ac70b5597d79884e61d88a4c568e034358ec62f6bc5e5ddc6a0c52908
 ```
 
-Anonymous registry pull was independently verified with HTTP 200 and this exact digest. Deployment on the actual HAOS VM and the physical Shelly test remain pending.
+Anonymous registry pull was independently verified with HTTP 200 and this exact digest. On 2026-10-01, installation on the dedicated HAOS 18.3 `amd64` / `qemux86-64` test VM also completed: after a full backup, `ha core options` and `ha core update` returned success, and `ha core info` showed the custom image and version `2026.11.0.dev0`, replacing the recorded `2026.9.4` image.
+
+This deployment evidence comes from the operator's terminal screenshot. Opening the native flow on that VM, TLS/log verification and pairing with a physical Shelly remain pending; the CLI result alone does not prove those checks.
 
 ## Build and checks
 
@@ -38,10 +40,13 @@ This startup smoke check does not validate a physical Shelly, HAOS Supervisor de
    Save the returned backup slug and download the checkpoint from HA's backup UI. The checkpoint contains HA secrets; keep it private.
 
 3. Verify the image workflow is green. Anonymous pull of the recorded image has been checked; registry login is not required. The image contains public fork source and build metadata, not your HA configuration or pairing credentials.
-4. Switch the Core image and install the development version:
+4. Switch the Core image and install the development version. Run each command separately and wait for it to complete:
 
    ```sh
    ha core options --image ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64
+   ```
+
+   ```sh
    ha core update --version 2026.11.0.dev0
    ```
 
