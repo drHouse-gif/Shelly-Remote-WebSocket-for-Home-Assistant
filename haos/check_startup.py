@@ -3,7 +3,6 @@
 import json
 import secrets
 import time
-from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -43,7 +42,7 @@ def main() -> None:
         try:
             request("/api/onboarding")
             break
-        except (HTTPError, URLError, TimeoutError):
+        except OSError:
             if time.monotonic() >= deadline:
                 raise SystemExit("Home Assistant onboarding did not become available")
             time.sleep(2)
