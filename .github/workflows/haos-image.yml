@@ -28,7 +28,7 @@ jobs:
       packages: write # Publish the smoke-tested development image to GHCR.
     env:
       REMOTE_IMAGE: ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64
-      IMAGE_VERSION: 2026.11.0.dev1
+      IMAGE_VERSION: 2026.11.0.dev2
       BASE_IMAGE: ghcr.io/home-assistant/amd64-homeassistant-base:2026.07.0
       BASE_DIGEST: >-
         sha256:2b3125e4633c864005714e21844667a8790fcea3ac4e30a05b7a1fe283696af6
@@ -42,7 +42,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: drHouse-gif/core
-          ref: b2e5fb3eba8645cce0453829c12f02a9c4b2135f
+          ref: f5e9025b01ae70abdb0a94fcbafbaddf2d5070eb
           path: core
           persist-credentials: false
       - name: Check out tested aioshelly

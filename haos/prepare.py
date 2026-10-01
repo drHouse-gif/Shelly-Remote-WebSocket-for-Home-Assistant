@@ -9,7 +9,7 @@ from pathlib import Path
 
 import tomllib
 
-CORE_COMMIT = "b2e5fb3eba8645cce0453829c12f02a9c4b2135f"
+CORE_COMMIT = "f5e9025b01ae70abdb0a94fcbafbaddf2d5070eb"
 AIOSHELLY_COMMIT = "74751fcb876cc5fbd993721da765d40cd5b5b750"
 CORE_VERSION = "2026.11.0.dev0"
 
