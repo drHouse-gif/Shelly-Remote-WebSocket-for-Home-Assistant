@@ -16,7 +16,9 @@ The revised image includes the progress-screen URL fix from [Core run 3688958189
 sha256:126d50ab8a8fa0a80a076c2e7f8c0e7339a7b3bf846eb226f40c0eb8dd315bed
 ```
 
-Anonymous registry access to this revised tag was independently verified with HTTP 200 and this exact digest. Installation of the revised image and physical pairing remain pending.
+Anonymous registry access to this revised tag was independently verified with HTTP 200 and this exact digest. On 2026-10-01, the operator reported completing the revised-image update and successful Pro 3EM pairing. The native Shelly integration screenshot shows 36 entities across the main device and three phases. A new `ha core info` result has not been captured; the diagnostics transport, live measurements, reconnect and runtime log checks remain pending.
+
+The same VM displays the Supervisor repair `home_assistant_core_custom_image`, consistent with running this custom Core image. Record it as a development-image warning; continue testing on the dedicated VM. See [TESTING.md](TESTING.md) for the observed physical milestone and outstanding checks.
 
 ## Recorded first-image validation
 
@@ -28,7 +30,7 @@ sha256:d430b68ac70b5597d79884e61d88a4c568e034358ec62f6bc5e5ddc6a0c52908
 
 Anonymous registry pull was independently verified with HTTP 200 and this exact digest. On 2026-10-01, installation on the dedicated HAOS 18.3 `amd64` / `qemux86-64` test VM also completed: after a full backup, `ha core options` and `ha core update` returned success, and `ha core info` showed the custom image and version `2026.11.0.dev0`, replacing the recorded `2026.9.4` image.
 
-The operator's terminal and UI screenshots confirm installation and opening the native flow on that VM. The Shelly screenshot identifies a Pro 3EM on firmware 1.7.5. TLS/log verification and pairing with that physical device remain pending; opening the flow does not prove a connection.
+The operator's terminal and UI screenshots confirmed installation and opening the native flow on that VM. The Shelly screenshot identified a Pro 3EM on firmware 1.7.5. This first-image result preceded the URL display fix and the revised-image physical pairing report above.
 
 ## Build and checks
 

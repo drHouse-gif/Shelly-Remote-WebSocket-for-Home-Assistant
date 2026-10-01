@@ -11,7 +11,7 @@ This is a fork development project, not a released Home Assistant feature. No up
 
 The HA implementation includes secure admission, identity binding, a native config flow, hash-only persistent pairing credentials, hostless `RpcDevice` setup, shared platforms, outage availability, reconnect resynchronization, startup recovery, revoke/regenerate, diagnostics and logging redaction. Local Shelly and battery-device behavior remain covered by the complete Shelly test suite.
 
-Local and GitHub CI validation: 772 Core Shelly tests and 558 snapshots passed; 363 aioshelly tests passed. Both fork CI runs are green; see [TESTING.md](TESTING.md). The actual HAOS VM loads the native flow; its first UI check exposed a pairing URL display regression, now fixed. A physical Internet-separated Shelly has not yet connected.
+Local and GitHub CI validation: 772 Core Shelly tests and 558 snapshots passed; 363 aioshelly tests passed. Both fork CI runs are green; see [TESTING.md](TESTING.md). On the dedicated HAOS VM, the operator reports successful pairing of a physical Pro 3EM after the progress URL fix and image update. The native integration screenshot shows 36 entities across the main device and its three phases. Confirmation of the entry's remote transport, live measurements, reconnect behavior, runtime log protection and Internet-separated topology remains pending.
 
 Read [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md), [TESTING.md](TESTING.md) and [ROADMAP.md](ROADMAP.md) before trying the forks.
 

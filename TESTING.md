@@ -15,12 +15,22 @@
 | Core GitHub CI                                    | [Run 36889581891](https://github.com/drHouse-gif/core/actions/runs/36889581891), success; 772 tests and 558 snapshots                                                                         |
 | HAOS development image build and startup smoke    | [Run 36882493791](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36882493791), success; source hashes, 149 packages, `RUNNING` and native remote form |
 | Revised HAOS image with progress URL fix           | [Run 36890779081](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36890779081), success; `2026.11.0.dev1`, source/translation checks, 149 packages and fresh boot |
-| Dedicated HAOS 18.3 VM image installation          | Operator terminal screenshot: update completed; `ha core info` reports the custom `qemux86-64` image and `2026.11.0.dev0`; native flow opens; revised image and physical pairing checks pending |
-| Native flow on the actual HAOS VM                 | Remote choice and waiting screen load; URL display regression exposed and fixed at `b2e5fb3`; revised image deployment pending |
-| Physical test device identified                   | Shelly Pro 3EM, firmware 1.7.5; the displayed HTTPS origin is not a complete outbound WSS pairing URL; no connection confirmed |
+| Dedicated HAOS 18.3 VM image installation          | First image installation confirmed by terminal screenshot; operator subsequently reports completing the `2026.11.0.dev1` update; updated `ha core info` result not captured |
+| Native flow on the actual HAOS VM                 | URL display regression fixed at `b2e5fb3`; operator reports successful pairing after the revised-image update |
+| Physical Pro 3EM native entity registration        | Firmware 1.7.5 identified earlier; integration screenshot shows 36 entities: 12 on the main device and 8 on each of three phase devices |
+| Physical remote transport and live measurements   | Diagnostics `transport.type` / `connected` and changing sensor values not yet captured |
+| Physical reconnect and runtime security checks    | Still pending: outage/recovery, storage inspection, TLS trust, log redaction and credential rotation/revocation |
 | Physical Gen2/3/4 device across separate networks | Not yet performed                                                                                                                                                                             |
 
 The native integration test uses actual `RpcDevice` and `WsServerConnection`, with a queue-backed simulated device socket. It exercises endpoint identity query, native entity loading, `Switch.Set`, status/event notifications, availability, replacement socket, unchanged registry identities, diagnostics redaction and remote Repair exemption. A second test restores a hash-only entry while offline and proves setup resumes when the device connects. Existing full-suite tests retain local, battery and local outbound-WS Repair coverage.
+
+## Recorded Pro 3EM milestone
+
+On 2026-10-01, the operator reported that pairing worked after completing the revised-image update. The native Shelly integration screenshot confirms registration of the physical Pro 3EM's main device and Phase A, B and C devices, with 36 entities in total. A separate screenshot shows the Supervisor repair `home_assistant_core_custom_image`, consistent with the custom development container. No raw pairing URL is included in these screenshots or this record.
+
+This evidence confirms native entity registration. It does not independently establish the entry's transport type, a currently connected socket, live measurement updates or absence of a route between the two private networks. The remaining physical tests below still apply.
+
+For the next check, download diagnostics from the Shelly entry's menu and inspect them locally. Require `transport.type` to be `remote_ws` and `transport.connected` to be `true`; share only these two fields. Then open a phase device and compare changing voltage/current/power measurements with the device's local UI. Temporarily disconnect the test device's network, restore it and verify that the same entities recover automatically. Keep diagnostics, stored entries and logs private until their redaction has been checked.
 
 ## Reproduce development checks
 
