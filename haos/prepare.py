@@ -9,7 +9,7 @@ from pathlib import Path
 
 import tomllib
 
-CORE_COMMIT = "726a64d62c7a95bb27cec5a72163df3e1c2d822a"
+CORE_COMMIT = "b2e5fb3eba8645cce0453829c12f02a9c4b2135f"
 AIOSHELLY_COMMIT = "74751fcb876cc5fbd993721da765d40cd5b5b750"
 CORE_VERSION = "2026.11.0.dev0"
 
@@ -21,6 +21,7 @@ def main() -> None:
     parser.add_argument("--aioshelly", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--base-image", required=True)
+    parser.add_argument("--image-version", required=True)
     args = parser.parse_args()
 
     sources = {"core": args.core, "aioshelly": args.aioshelly}
@@ -86,6 +87,7 @@ def main() -> None:
         "core_commit": CORE_COMMIT,
         "aioshelly_commit": AIOSHELLY_COMMIT,
         "core_version": CORE_VERSION,
+        "image_version": args.image_version,
         "base_image": args.base_image,
         "architecture": "amd64",
         "machine": "qemux86-64",

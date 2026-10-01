@@ -7,11 +7,11 @@ This is a fork development project, not a released Home Assistant feature. No up
 | Repository                                                 | Feature branch                       | Tested implementation                      |
 | ---------------------------------------------------------- | ------------------------------------ | ------------------------------------------ |
 | [aioshelly](https://github.com/drHouse-gif/aioshelly)      | `feature/remote-websocket-transport` | `74751fcb876cc5fbd993721da765d40cd5b5b750` |
-| [Home Assistant Core](https://github.com/drHouse-gif/core) | `feature/remote-websocket-transport` | `726a64d62c7a95bb27cec5a72163df3e1c2d822a` |
+| [Home Assistant Core](https://github.com/drHouse-gif/core) | `feature/remote-websocket-transport` | `b2e5fb3eba8645cce0453829c12f02a9c4b2135f` |
 
 The HA implementation includes secure admission, identity binding, a native config flow, hash-only persistent pairing credentials, hostless `RpcDevice` setup, shared platforms, outage availability, reconnect resynchronization, startup recovery, revoke/regenerate, diagnostics and logging redaction. Local Shelly and battery-device behavior remain covered by the complete Shelly test suite.
 
-Local and GitHub CI validation: 771 Core Shelly tests and 558 snapshots passed; 363 aioshelly tests passed. Both fork CI runs are green; see [TESTING.md](TESTING.md). A physical Internet-separated Shelly has not yet been tested.
+Local and GitHub CI validation: 772 Core Shelly tests and 558 snapshots passed; 363 aioshelly tests passed. Both fork CI runs are green; see [TESTING.md](TESTING.md). The actual HAOS VM loads the native flow; its first UI check exposed a pairing URL display regression, now fixed. A physical Internet-separated Shelly has not yet connected.
 
 Read [ARCHITECTURE.md](ARCHITECTURE.md), [SECURITY.md](SECURITY.md), [TESTING.md](TESTING.md) and [ROADMAP.md](ROADMAP.md) before trying the forks.
 

@@ -1,14 +1,15 @@
 # syntax=docker/dockerfile@sha256:2780b5c3bab67f1f76c781860de469442999ed1a0d7992a5efdf2cffc0e3d769
 ARG BUILD_FROM=ghcr.io/home-assistant/amd64-homeassistant-base:2026.07.0@sha256:2b3125e4633c864005714e21844667a8790fcea3ac4e30a05b7a1fe283696af6
 FROM ${BUILD_FROM}
+ARG IMAGE_VERSION=2026.11.0.dev1
 
 LABEL io.hass.type="core" \
     io.hass.arch="amd64" \
     io.hass.machine="qemux86-64" \
-    io.hass.version="2026.11.0.dev0" \
+    io.hass.version="${IMAGE_VERSION}" \
     org.opencontainers.image.title="Remote Shelly HAOS development image" \
     org.opencontainers.image.source="https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant" \
-    org.opencontainers.image.revision="726a64d62c7a95bb27cec5a72163df3e1c2d822a" \
+    org.opencontainers.image.revision="b2e5fb3eba8645cce0453829c12f02a9c4b2135f" \
     org.opencontainers.image.licenses="Apache-2.0"
 
 ENV S6_SERVICES_GRACETIME=240000 \
