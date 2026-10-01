@@ -8,7 +8,15 @@ The image build version is `2026.11.0.dev1`; the pinned Core package still repor
 ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64:2026.11.0.dev1
 ```
 
-The revised image includes the progress-screen URL fix from [Core run 36889581891](https://github.com/drHouse-gif/core/actions/runs/36889581891), which passed 772 tests and 558 snapshots. The first VM UI test exposed that the frontend reads `config.progress.remote_connect`, while the URL instructions were under `config.step.remote_connect.description`. The fix moves the instructions and URL placeholder to the displayed progress text and renders the URL as code for copying. The image check now verifies the generated English progress translation includes that placeholder. The revised image must pass its own build checks before installation.
+The revised image includes the progress-screen URL fix from [Core run 36889581891](https://github.com/drHouse-gif/core/actions/runs/36889581891), which passed 772 tests and 558 snapshots. The first VM UI test exposed that the frontend reads `config.progress.remote_connect`, while the URL instructions were under `config.step.remote_connect.description`. The fix moves the instructions and URL placeholder to the displayed progress text and renders the URL as code for copying. The image check now verifies the generated English progress translation includes that placeholder.
+
+[Revised image run 36890779081](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36890779081) passed the source and translation checks, consistency check for 149 installed packages and fresh boot to `RUNNING` with the native remote choice. It published `2026.11.0.dev1` with digest:
+
+```text
+sha256:126d50ab8a8fa0a80a076c2e7f8c0e7339a7b3bf846eb226f40c0eb8dd315bed
+```
+
+Anonymous registry access to this revised tag was independently verified with HTTP 200 and this exact digest. Installation of the revised image and physical pairing remain pending.
 
 ## Recorded first-image validation
 

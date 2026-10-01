@@ -14,8 +14,9 @@
 | Fork workflow security/YAML/format checks         | Passed                                                                                                                                                                                        |
 | Core GitHub CI                                    | [Run 36889581891](https://github.com/drHouse-gif/core/actions/runs/36889581891), success; 772 tests and 558 snapshots                                                                         |
 | HAOS development image build and startup smoke    | [Run 36882493791](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36882493791), success; source hashes, 149 packages, `RUNNING` and native remote form |
+| Revised HAOS image with progress URL fix           | [Run 36890779081](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36890779081), success; `2026.11.0.dev1`, source/translation checks, 149 packages and fresh boot |
 | Dedicated HAOS 18.3 VM image installation          | Operator terminal screenshot: update completed; `ha core info` reports the custom `qemux86-64` image and `2026.11.0.dev0`; native flow opens; revised image and physical pairing checks pending |
-| Native flow on the actual HAOS VM                 | Remote choice and waiting screen load; URL display regression exposed and fixed at `b2e5fb3`; revised image validation pending |
+| Native flow on the actual HAOS VM                 | Remote choice and waiting screen load; URL display regression exposed and fixed at `b2e5fb3`; revised image deployment pending |
 | Physical test device identified                   | Shelly Pro 3EM, firmware 1.7.5; the displayed HTTPS origin is not a complete outbound WSS pairing URL; no connection confirmed |
 | Physical Gen2/3/4 device across separate networks | Not yet performed                                                                                                                                                                             |
 
@@ -61,6 +62,8 @@ Workspace limitations were handled explicitly: full `script/setup` could not bui
 For a dedicated HAOS `amd64` / `qemux86-64` test VM, use [HAOS.md](HAOS.md) to install the pinned native Core image. The image handles the aioshelly dependency override itself; the direct Core commands below apply to the Linux development environment.
 
 Use an isolated HA Core development instance, not the existing production HAOS system. Network A contains a mains-powered Shelly Plus/Pro or compatible Gen3/4 device. Network B contains the HA instance with publicly reachable HTTPS/WSS, a trusted certificate and WebSocket forwarding. Do not route Network A's private subnet to HA.
+
+For the current Pro 3EM test device, validate its native EM/EMData measurements and status notifications. The relay and input steps below apply to devices with those components. A Pro 3EM without the switch add-on can exercise outbound RPC and reconnection using its native reboot button on the test device; verify that the same measurement entities recover afterwards. Record which component-specific steps apply.
 
 1. Verify HA and reverse-proxy/edge log redaction using an expendable canary, including error paths. See SECURITY.md.
 2. Run the tested Core/library forks. Start an isolated Core configuration with `uv run --no-sync hass --config /tmp/shelly-remote-test-config --skip-pip` after installing its integration dependencies. `--skip-pip` prevents HA from replacing the development library with the manifest's released version. Check the library's installed version and source path before pairing.

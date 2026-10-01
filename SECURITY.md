@@ -36,6 +36,14 @@ The filter formats arguments, removes the complete absolute or relative pairing 
 
 This is an audit of known sources, not a guarantee for arbitrary third-party middleware, future logger names, custom handlers, crash dumps or edge telemetry. Re-audit source changes before release. A logger filter does not propagate automatically to child loggers; the exact emitting sources are registered explicitly. No raw pairing URL should be pasted into tickets, CI output, screenshots or exported device config.
 
+## Native Home Assistant Cloud route
+
+The audited image uses `hass-nabucasa` 2.7.0 and `snitun` 0.47.0. In `hass_nabucasa/remote.py`, the certificate context and HA's existing aiohttp runner are passed to `SniTunClientAioHttp`. Its `TransportConnector` terminates TLS locally with `start_tls(..., server_side=True)` and hands the resulting transport to HA's HTTP protocol. The inspected lifecycle/connector log calls contain connection metadata and transport errors; they do not log HTTP request lines. HA/aiohttp's decrypted-request logging still requires the filters audited above.
+
+[Nabu Casa's deep dive](https://support.nabucasa.com/hc/en-us/articles/25619268678557-Remote-access-Deep-dive) documents TCP forwarding of encrypted traffic and decryption on the HA instance; its [security documentation](https://support.nabucasa.com/hc/en-us/articles/26508882007581-Remote-access-Security-aspects) places the certificate private key on HA. Under that documented model, the relay cannot read the pairing query string. This is a source/model inference, not a claim to have inspected deployed relay telemetry, and it does not apply to a separate TLS-terminating proxy.
+
+Initialize an expendable remote flow first: the endpoint and filters are registered lazily. Keep its generated URL private and unused on a device. Send a request to `/api/shelly/remote` through the intended HTTPS origin with the public test marker `remote_key=HA_REMOTE_LOG_CANARY_20261001`, using normal certificate verification and no browser `Origin` header. The endpoint returns 401 for that invalid marker after the secure-request check; a 403 or a 404 after initialization needs investigation. Check locally that HA and any other plaintext log sinks contain no raw canary, then cancel the expendable flow to revoke its credential. The invalid-marker check proves neither successful WebSocket admission nor all error paths; complete the remaining canary and physical-device procedure too. Publish only the HTTP status and redaction result, then start a fresh flow for the device.
+
 ## Reverse-proxy configuration
 
 NGINX's default combined access log uses `$request`; `$request_uri` also includes arguments. Replacing an access log with a whitelist that excludes the request line, arguments and headers avoids recording the secret for that log. For example, define in `http`:
