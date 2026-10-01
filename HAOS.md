@@ -8,6 +8,14 @@ The image version is `2026.11.0.dev0`, matching the pinned Core source. The cont
 ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64:2026.11.0.dev0
 ```
 
+Validated on 2026-10-01: [build run 36882493791](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36882493791) passed the source checks, consistency check for 149 installed packages, fresh boot to `RUNNING` and native remote Shelly form check. The image was pushed with digest:
+
+```text
+sha256:d430b68ac70b5597d79884e61d88a4c568e034358ec62f6bc5e5ddc6a0c52908
+```
+
+Anonymous registry pull was independently verified with HTTP 200 and this exact digest. Deployment on the actual HAOS VM and the physical Shelly test remain pending.
+
 ## Build and checks
 
 The feature branch's [image workflow](.github/workflows/haos-image.yml) checks out both commits explicitly. It resolves the official Core base `2026.07.0` to its digest and records that digest, source hashes and preinstalled integration dependencies in the build provenance artifact. It installs Core, the fork library, the default-config dependency closure, Shelly and HAOS/Cloud dependencies; other integration requirements can still be installed normally by HA.
@@ -29,7 +37,7 @@ This startup smoke check does not validate a physical Shelly, HAOS Supervisor de
 
    Save the returned backup slug and download the checkpoint from HA's backup UI. The checkpoint contains HA secrets; keep it private.
 
-3. Verify the image workflow is green. If its summary says anonymous pull is unavailable, open your GitHub profile's **Packages** → **shelly-remote-haos-qemux86-64** → **Package settings** and change the package visibility to **Public**. GHCR packages start private by default. The image contains public fork source and build metadata, not your HA configuration or pairing credentials.
+3. Verify the image workflow is green. Anonymous pull of the recorded image has been checked; registry login is not required. The image contains public fork source and build metadata, not your HA configuration or pairing credentials.
 4. Switch the Core image and install the development version:
 
    ```sh

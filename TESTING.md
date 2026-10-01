@@ -2,18 +2,19 @@
 
 ## Results recorded on 2026-10-01
 
-| Check                                             | Result                                                                                                                |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| aioshelly full tests at `74751fcb`                | 363 passed                                                                                                            |
-| aioshelly Ruff, formatter, `ty`, pydocstyle       | Passed                                                                                                                |
-| aioshelly GitHub CI                               | [Run 36860221316](https://github.com/drHouse-gif/aioshelly/actions/runs/36860221316), success                         |
-| Core complete `tests/components/shelly` suite     | 771 passed; 558 snapshots passed                                                                                      |
-| Core remote subset                                | 54 passed                                                                                                             |
-| Core Shelly Ruff, Mypy, Pylint                    | Passed                                                                                                                |
-| Full Hassfest for the Shelly integration          | Passed                                                                                                                |
-| Fork workflow security/YAML/format checks         | Passed                                                                                                                |
-| Core GitHub CI                                    | [Run 36862219395](https://github.com/drHouse-gif/core/actions/runs/36862219395), success; 771 tests and 558 snapshots |
-| Physical Gen2/3/4 device across separate networks | Not yet performed                                                                                                     |
+| Check                                             | Result                                                                                                                                                                                        |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| aioshelly full tests at `74751fcb`                | 363 passed                                                                                                                                                                                    |
+| aioshelly Ruff, formatter, `ty`, pydocstyle       | Passed                                                                                                                                                                                        |
+| aioshelly GitHub CI                               | [Run 36860221316](https://github.com/drHouse-gif/aioshelly/actions/runs/36860221316), success                                                                                                 |
+| Core complete `tests/components/shelly` suite     | 771 passed; 558 snapshots passed                                                                                                                                                              |
+| Core remote subset                                | 54 passed                                                                                                                                                                                     |
+| Core Shelly Ruff, Mypy, Pylint                    | Passed                                                                                                                                                                                        |
+| Full Hassfest for the Shelly integration          | Passed                                                                                                                                                                                        |
+| Fork workflow security/YAML/format checks         | Passed                                                                                                                                                                                        |
+| Core GitHub CI                                    | [Run 36862219395](https://github.com/drHouse-gif/core/actions/runs/36862219395), success; 771 tests and 558 snapshots                                                                         |
+| HAOS development image build and startup smoke    | [Run 36882493791](https://github.com/drHouse-gif/Shelly-Remote-WebSocket-for-Home-Assistant/actions/runs/36882493791), success; source hashes, 149 packages, `RUNNING` and native remote form |
+| Physical Gen2/3/4 device across separate networks | Not yet performed                                                                                                                                                                             |
 
 The native integration test uses actual `RpcDevice` and `WsServerConnection`, with a queue-backed simulated device socket. It exercises endpoint identity query, native entity loading, `Switch.Set`, status/event notifications, availability, replacement socket, unchanged registry identities, diagnostics redaction and remote Repair exemption. A second test restores a hash-only entry while offline and proves setup resumes when the device connects. Existing full-suite tests retain local, battery and local outbound-WS Repair coverage.
 
