@@ -1,6 +1,6 @@
-# Upstream draft review
+# Upstream review
 
-The operator explicitly authorized publication on 2026-10-01. These two draft PRs are open and linked to one another:
+The operator explicitly authorized publication on 2026-10-01. Both PRs were opened as drafts and are linked to one another. On 2026-10-02, the library PR is open and no longer a draft; Core remains an open draft.
 
 | Proposal                                                                                                                                    | Target                               | Fork review head                           | Scope                                                                 |
 | ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------ | --------------------------------------------------------------------- |
@@ -28,7 +28,13 @@ These are subsequent commits, without rewriting the published PR history. The ai
 
 Core remains a draft dependent on the library proposal. Its current manifest still specifies released aioshelly, which does not provide the new transport API. After the library is reviewed and published, Core needs the normal manifest and generated-requirements update before it is ready. The development dependency override is documented in [TESTING.md](TESTING.md), not included as a production dependency mechanism.
 
-Recorded library validation remains green: 363 tests at `74751fcb`. Core `f5e9025` passed all 790 Shelly tests and 558 snapshots locally, plus Ruff, Mypy, Pylint and Hassfest. The latest [fork CI 36926623186](https://github.com/drHouse-gif/core/actions/runs/36926623186) is green with the same paired library. Earlier expiry-only [CI 36923611635](https://github.com/drHouse-gif/core/actions/runs/36923611635) and behavior-fix [CI 36919929713](https://github.com/drHouse-gif/core/actions/runs/36919929713) are also green. The physical Pro 3EM milestone is native registration of 36 entities on the older image; transport diagnostics, live values, outage recovery, TLS/log protection, verified rotation and Internet-separated topology remain pending.
+Recorded library validation remains green: 363 tests at `74751fcb`. Core `f5e9025` passed all 790 Shelly tests and 558 snapshots locally, plus Ruff, Mypy, Pylint and Hassfest. The latest [fork CI 36926623186](https://github.com/drHouse-gif/core/actions/runs/36926623186) is green with the same paired library. Earlier expiry-only [CI 36923611635](https://github.com/drHouse-gif/core/actions/runs/36923611635) and behavior-fix [CI 36919929713](https://github.com/drHouse-gif/core/actions/runs/36919929713) are also green. The `dev2` installation is now confirmed and the operator reports successful restart/network recovery, credential rotation with old-URL rejection, and explicit revocation/recovery. See [TESTING.md](TESTING.md) for evidence limits and the remaining deployment/security checks.
+
+## Discussion checked on 2026-10-02
+
+Neither PR has a human review or comment in the retrieved discussion timeline. The library PR has no comments. Core has 14 entries from Home Assistant and Copilot bots only. This is not maintainer approval or rejection.
+
+The latest [Copilot review](https://github.com/home-assistant/core/pull/183944#pullrequestreview-5385600582), submitted on 2026-10-01 at 21:13 UTC, additionally flags trailing-dot local hostnames such as `localhost.` and `device.local.` bypassing public-origin validation. This finding needs reproduction against the pinned implementation; the published dependency and official documentation remain separate blockers. Previously fixed findings must be assessed against the current code rather than the bot's summary alone.
 
 Initial upstream workflow statuses captured on 2026-10-01:
 
