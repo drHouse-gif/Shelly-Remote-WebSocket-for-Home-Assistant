@@ -30,7 +30,7 @@ ha core info
 
 The existing custom image override should remain `ghcr.io/drhouse-gif/shelly-remote-haos-qemux86-64`; check it before updating. `ha core info` must report image build version `2026.11.0.dev2`. The existing remote entry and device URL should continue working after HA restarts. Inspect diagnostics locally for `transport.type: remote_ws` and `transport.connected: true`, then perform the measurements, outage/recovery and credential rotation steps in [TESTING.md](TESTING.md). Share only sanitized results.
 
-On 2026-10-02, the operator's terminal screenshot confirmed the pre-update backup, successful update and custom image/build version `2026.11.0.dev2` in `ha core info`. The operator subsequently reported successful operation after restarting HA and after disconnecting/restoring the test device's network. These functional results do not yet establish the diagnostics transport type or validate the newer security fixes; see [TESTING.md](TESTING.md) for the evidence limits and remaining checks.
+On 2026-10-02, the operator's terminal screenshot confirmed the pre-update backup, successful update and custom image/build version `2026.11.0.dev2` in `ha core info`. The operator subsequently reported successful operation after restarting HA and after disconnecting/restoring the test device's network, then successful credential regeneration with the replacement URL working and the previous URL rejected. These operator reports do not establish the diagnostics transport type, hash-only storage or deployment-wide log redaction; see [TESTING.md](TESTING.md) for the evidence limits and remaining security checks.
 
 ## Recorded dev1 validation
 
